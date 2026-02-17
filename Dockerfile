@@ -64,6 +64,11 @@ WORKDIR /ros2_ws
 
 COPY ./src ./src
 
+# Ensure LASzip v3.4.3 with correct headers
+RUN git clone --branch 3.4.3 --depth 1 https://github.com/LASzip/LASzip.git /tmp/LASzip && \
+    cp -rf /tmp/LASzip/* src/superOdom-to-hdmapping/src/3rdparty/LASzip/ && \
+    rm -rf /tmp/LASzip
+
 RUN ldconfig
 
 # Replace livox_ros_driver2 -> livox_ros_driver (bag has v1 CustomMsg type)
