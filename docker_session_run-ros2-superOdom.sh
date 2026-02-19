@@ -57,6 +57,22 @@ echo "Output dir    : $BAG_OUTPUT_HOST"
 
 xhost +local:docker >/dev/null
 
+# Fix livox_ros_driver -> livox_ros_driver2 type name in bag (if needed)
+python3 -c "
+import sqlite3, pathlib, sys
+bag = pathlib.Path(sys.argv[1])
+for db in bag.glob('*.db3'):
+    c = sqlite3.connect(str(db))
+    c.execute(\"UPDATE topics SET type='livox_ros_driver2/msg/CustomMsg' WHERE type='livox_ros_driver/msg/CustomMsg'\")
+    c.commit(); c.close()
+m = bag / 'metadata.yaml'
+if m.exists():
+    t = m.read_text()
+    if 'livox_ros_driver/msg/CustomMsg' in t:
+        m.write_text(t.replace('livox_ros_driver/msg/CustomMsg', 'livox_ros_driver2/msg/CustomMsg'))
+        print('Fixed bag type: livox_ros_driver -> livox_ros_driver2')
+" "$DATASET_HOST_PATH" 2>/dev/null || true
+
 docker run -it --rm \
   --network host \
   -e DISPLAY=$DISPLAY \
@@ -102,7 +118,15 @@ ros2 bag play '"$DATASET_CONTAINER_PATH"' --clock; tmux wait-for -S BAG_DONE;
 echo "[play] done"
 '\'' C-m
 
-    # ---------- PANEL 4: controller ----------
+    # ---------- WINDOW 2: rviz2 ----------
+    tmux new-window -t '"$TMUX_SESSION"' -n rviz '\''
+source /opt/ros/humble/setup.bash
+source /ros2_ws/install/setup.bash
+sleep 8
+rviz2 -d /ros2_ws/src/SuperOdom/super_odometry/ros2.rviz
+'\''
+
+    # ---------- WINDOW 3: controller ----------
     tmux new-window -t '"$TMUX_SESSION"' -n control '\''
 source /opt/ros/humble/setup.bash
 source /ros2_ws/install/setup.bash
