@@ -46,7 +46,8 @@ You are now back on the HOST (after `exit` in Step 3)
 ```shell
 cd ~/hdmapping-benchmark/benchmark-SuperOdometry-to-HDMapping
 chmod +x docker_session_run-ros2-superOdom.sh
-./docker_session_run-ros2-superOdom.sh ~/hdmapping-benchmark/data/reg-1-ros2-lidar ~/hdmapping-benchmark/data
+./docker_session_run-ros2-superOdom.sh ~/hdmapping-benchmark/data/reg-1-ros2-lidar-SuperOdometry/ ~/hdmapping-benchmark/data
+
 ```
 
 ## Step 5 (Open and visualize data)
