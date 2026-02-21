@@ -36,7 +36,7 @@ We now convert data from ROS1 to ROS2
 ```shell
 docker run -it -v ~/hdmapping-benchmark/data:/data --user 1000:1000 superodom_humble /bin/bash
 cd /data
-rosbags-convert --src reg-1-convert.bag --dst reg-1-ros2-lidar
+rosbags-convert --src reg-1-convert-SuperOdometry-ROS1/reg-1-convert-SuperOdometry-hdmapping --dst reg-1-ros2-lidar-SuperOdometry
 exit
 ```
 
