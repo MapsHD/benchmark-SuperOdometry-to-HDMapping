@@ -10,8 +10,8 @@ Step 1 performs the first two conversions using mandeye_to_bag:
 
  ```shell
 cd ~/hdmapping-benchmark/mandeye_to_bag
-./mandeye-convert.sh ~/hdmapping-benchmark/data/reg-1.bag ~/hdmapping-benchmark/data/reg-1-convert ros1-to-hdmapping
-./mandeye-convert.sh ~/hdmapping-benchmark/data/reg-1-convert ~/hdmapping-benchmark/data/reg-1-convert.bag hdmapping-to-ros1
+./mandeye-convert.sh ~/hdmapping-benchmark/data/reg-1.bag ~/hdmapping-benchmark/data/reg-1-convert-SuperOdometry-hdmapping ros1-to-hdmapping
+./mandeye-convert.sh ~/hdmapping-benchmark/data/reg-1-convert-SuperOdometry-hdmapping ~/hdmapping-benchmark/data/reg-1-convert-SuperOdometry-ROS1 hdmapping-to-ros1
 ```
 
 The final conversion (rosbags-convert) happens in **Step 3**, which creates `reg-1-ros2-lidar` folder.
