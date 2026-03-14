@@ -32,7 +32,7 @@ docker build -t superodom_humble .
 cd ~/hdmapping-benchmark/benchmark-SuperOdometry-to-HDMapping
 chmod +x docker_session_run-ros2-superOdom.sh
 cd ~/hdmapping-benchmark/data
-~/hdmapping-benchmark/benchmark-GenZ-ICP-to-HDMapping/docker_session_run-ros2-genz-icp.sh kitti_seq00_ros2/2011_10_03_drive_0027_extract_ros2/ .
+~/hdmapping-benchmark/benchmark-SuperOdometry-to-HDMapping/docker_session_run-ros2-genz-icp.sh kitti_seq00_ros2/2011_10_03_drive_0027_extract_ros2/ .
 ```
 
 ## Step 4 (Open and visualize data)
