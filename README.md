@@ -1,71 +1,55 @@
-# [SuperOdom](https://github.com/superxslam/SuperOdom) converter to [HDMapping](https://github.com/MapsHD/HDMapping)
+# SuperOdometry to HDMapping simplified instruction
 
-## Hint
+## Step 1 (prepare data)
+Download the dataset `kitti_seq00_ros2.zip` by clicking [link](https://huggingface.co/datasets/kubchud/kitti_to_ros/resolve/main/kitti_seq00_ros2.zip) (it is part of [kitti_seq](https://github.com/Jakubach/kitti_to_ros)).
 
-Please change branch to [Bunker-DVI-Dataset-reg-1](https://github.com/MapsHD/benchmark-SuperOdometry-to-HDMapping/tree/Bunker-DVI-Dataset-reg-1) for quick experiment.
+### Extract the dataset
 
-
-## Example Dataset:
-
-Download the dataset from [Bunker DVI Dataset](https://charleshamesse.github.io/bunker-dvi-dataset/)
-
-## Intended use
-
-This small toolset allows to integrate SLAM solution provided by [SuperOdom](https://github.com/superxslam/SuperOdom) with [HDMapping](https://github.com/MapsHD/HDMapping).
-This repository contains ROS 2 workspace that :
-  - submodule to tested revision of superOdom
-  - a converter that listens to topics advertised from odometry node and save data in format compatible with HDMapping.
-
-## Dependencies
-```shell
-sudo apt install libgoogle-glog-dev libtbb-dev
-```
-
-## Building
-
-Clone the repo
-```shell
-mkdir -p ~/superodom_ws
-cd ~/superodom_ws
-git clone https://github.com/MapsHD/benchmark-SuperOdometry-to-HDMapping.git . --recursive
-git submodule update --init --recursive
-source /opt/ros/$ROS_DISTRO/setup.bash
-colcon build
-source install/setup.bash
-```
-
-## Usage - data SLAM:
-
-Prepare recorded bag with estimated odometry:
-
-In first terminal launch odometry:
-```shell
-source install/setup.bash
-ros2 launch super_odometry livox_mid360.launch.py
-```
-
-In second terminal play bag:
-```shell
-source install/setup.bash
-ros2 bag play /path/to/your/bag.mcap --clock
-```
-
-In third terminal record bag:
-```shell
-source install/setup.bash
-ros2 bag record /registered_scan /state_estimation -o my_recording --storage sqlite3
-```
-
-## During the record (if you want to stop recording earlier) / after finishing the bag:
-
-```
-In the terminal where the ros record is, interrupt the recording by CTRL+C
-Do it also in ros launch terminal by CTRL+C.
-```
-
-## Usage - Conversion (ROS bag to HDMapping, after recording stops):
+Folder `kitti_seq00_ros2.zip`.
 
 ```shell
-source install/setup.bash
-ros2 run superOdom-to-hdmapping listener my_recording output_hdmapping
+unzip kitti_seq00_ros2.zip
 ```
+After extraction, the folder name will be `kitti_seq00_ros2`  is an input for further calculations. (without the `.zip` extension).
+
+It should be located in `~/hdmapping-benchmark/data`.  
+
+
+## Step 2 (prepare docker)
+Run following commands in terminal
+
+```shell
+mkdir -p ~/hdmapping-benchmark
+cd ~/hdmapping-benchmark
+git clone https://github.com/MapsHD/benchmark-SuperOdometry-to-HDMapping.git --recursive
+cd benchmark-SuperOdometry-to-HDMapping
+git checkout kitti
+docker build -t superodom_humble .
+```
+
+## Step 3 (run docker, file 'kitti_seq00_ros2' should be in '~/hdmapping-benchmark/data')
+```shell
+cd ~/hdmapping-benchmark/benchmark-SuperOdometry-to-HDMapping
+chmod +x docker_session_run-ros2-superOdom.sh
+cd ~/hdmapping-benchmark/data
+~/hdmapping-benchmark/benchmark-SuperOdometry-to-HDMapping/docker_session_run-ros2-genz-icp.sh kitti_seq00_ros2/2011_10_03_drive_0027_extract_ros2/ .
+```
+
+## Step 4 (Open and visualize data)
+Expected data should appear in ~/hdmapping-benchmark/data/output_hdmapping-superOdom
+Use tool [multi_view_tls_registration_step_2](https://github.com/MapsHD/HDMapping) to open session.json from ~/hdmapping-benchmark/data/output_hdmapping-superOdom.
+
+You should see following data
+
+lio_initial_poses.reg
+
+poses.reg
+
+scan_lio_*.laz
+
+session.json
+
+trajectory_lio_*.csv
+
+## Contact email
+januszbedkowski@gmail.com
