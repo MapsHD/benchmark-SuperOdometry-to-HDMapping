@@ -82,6 +82,12 @@ RUN sed -i \
   -e "s|value='false'|value='true'|" \
   src/SuperOdom/super_odometry/launch/livox_mid360.launch.py
 
+# Canonical-bag sensor profile (config, calibration, launch with use_sim_time true),
+# kept out of the upstream SuperOdom submodule: its own vlp_16 files with only the
+# sensor description changed.
+COPY ./overlay/config/ ./src/SuperOdom/super_odometry/config/
+COPY ./overlay/launch/ ./src/SuperOdom/super_odometry/launch/
+
 RUN source /opt/ros/humble/setup.bash && \
     colcon build
 
